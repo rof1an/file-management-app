@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.FileMetadata;
-import com.example.demo.repo.FileMetadataRepository;
+import com.example.demo.repository.FileMetadataRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

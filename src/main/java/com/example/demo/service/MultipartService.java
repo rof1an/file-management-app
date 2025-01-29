@@ -1,8 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.FileMetadata;
-import com.example.demo.repo.FileMetadataRepository;
-import jakarta.annotation.PostConstruct;
+import com.example.demo.repository.FileMetadataRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,18 +29,6 @@ public class MultipartService {
 
     private final FileMetadataRepository fileMetadataRepository;
 
-    @PostConstruct
-    public void init() {
-        File uploadDir = new File(UPLOAD_PATH);
-
-        if (!uploadDir.exists() && !uploadDir.mkdirs()) {
-            log.error("Failed to create upload directory: {}", uploadDir.getAbsolutePath());
-            throw new RuntimeException("Failed to initialize upload directory");
-        } else {
-            log.info("Upload directory is ready: {}", uploadDir.getAbsolutePath());
-        }
-    }
-
     public String saveFile(MultipartFile file) {
         String randomId = UUID.randomUUID().toString();
         String resultFileName = randomId + "." + file.getOriginalFilename() + "." + file.getOriginalFilename();
@@ -51,7 +38,6 @@ public class MultipartService {
             File uploadDir = new File(UPLOAD_PATH);
             destinationFile = new File(uploadDir, resultFileName);
             file.transferTo(destinationFile);
-
 
             String destinationFileName = destinationFile.getName();
             String fileExtension =
@@ -75,8 +61,8 @@ public class MultipartService {
 
         try {
             Path filePath = Paths.get(UPLOAD_PATH, fileName);
-
             Resource resource = new UrlResource(filePath.toUri());
+
             if (resource.exists() && resource.isReadable()) {
                 return Optional.of(resource);
             } else {
